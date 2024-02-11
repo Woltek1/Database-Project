@@ -1,0 +1,5 @@
+1. npm i express
+2. npm i hbs
+3. npm i mongoose
+4. npm i -g nodemon
+5. nodemon src/index.js

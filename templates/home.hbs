@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundFlow</title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.icon-icons.com/icons2/3995/PNG/512/banking_business_payment_cash_finance_money_coin_icon_254032.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+        /* Elements that have influence on a whole page */
+        /*  
+        Color palette:
+        black - #1E1E1B
+        white - #EDEDED
+        mongo green - #006A48
+        mongo light green - #00ED64
+        */
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #EDEDED;
+            overflow-x: hidden;
+        }
+
+        input {
+            width: 15vw;
+            height: 4vh;
+            font-size: 2.5vh;
+            border-radius: 10px;
+            border-color: #1E1E1B;
+            padding: 0 1vw;
+            background-color: #EDEDED;
+        }
+
+        button {
+            width: 7.5vw;
+            height: 4vh;
+            background-color: #1E1E1B;
+            border-radius: 10px;
+            color: #f0f0f0;
+            font-size: 2vh;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            margin-top: 3.3vh;
+        }
+
+        button:nth-child(1) {
+            margin-top: 0;
+        }
+
+        button:hover {
+            background-color: gray;
+            color: #1E1E1B;
+        }
+
+        li {
+            font-size: 2.5vh;
+        }
+
+        a {
+            color: aqua;
+        }
+
+
+        /* Elements that are part of the header */
+        .heading {
+            width: 100vw;
+            height: 10vh;
+            display: flex;
+            background-color: #006A48;
+        }
+
+        .imgName {
+            width: 29vw;
+            height: 10vh;
+            padding-left: 1vw;
+            display: flex;
+            align-items: center;
+            color: #1E1E1B;
+        }
+
+        .buttons {
+            width: 70vw;
+            height: 10vh;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 3vw;
+        }
+
+        .icon {
+            height: 6vh;
+        }
+
+        .siteName {
+            font-size: 3.5vh;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        /* Elements that are part of the page before creating budget */
+        .beforeBudget {
+            width: 40vw;
+            height: 40vh;
+            text-align: center;
+            margin-left: 25vw;
+            padding: 5vw;
+            display: block;
+            margin-top: 5vh;
+        }
+
+        .textBefore {
+            font-size: 3vh;
+            color: #1E1E1B;
+        }
+
+        .textBefore:nth-child(1) {
+            font-size: 5vh;
+        }
+
+
+        /* Elements that are part of the page after creating budget */
+        .afterBudget {
+            display: none;
+        }
+
+        .exColor {
+            width: 17.2vw;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 60vh;
+        }
+
+        .left {
+            width: 50vw;
+            height: 45vh;
+            margin: 2vw;
+            border-radius: 30px;
+            
+        }
+
+        .right {
+            width: 40vw;
+            height: 45vh;
+            margin: 2vw;
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+        }
+
+        .div1 {
+            grid-area: 1 / 1 / 2 / 2;
+            padding: 20px;
+            margin-top: 10vh;
+        }
+
+        .div2 {
+            grid-area: 1 / 2 / 2 / 3;
+            padding: 20px;
+            margin-top: 10vh;
+        }
+
+        .div3 {
+            grid-area: 2 / 1 / 3 / 2;
+            padding: 20px;
+        }
+
+        .div4 {
+            grid-area: 2 / 2 / 3 / 3;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .text {
+            font-size: 3vh;
+            color: #1E1E1B;
+        }
+
+        /* Bottom section */
+        .bottomPart {
+            width: 100vw;
+            height: 25vh;
+            position: absolute;
+            bottom: 0;
+            background-color: #006A48;
+            background-image: url(https://cdn.discordapp.com/attachments/1010200548626141306/1206313147221278870/Bez_nazwy.png?ex=65db8daa&is=65c918aa&hm=a17d0ed6de658de81dc8c75661e7e1712c5b8f71fe7abd920e1bdbda0721c580&);
+            background-size: 100vw;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+        }
+
+        .icon {
+            height: 5vh;
+            cursor: pointer;
+            margin-left: 1vw;
+        }
+
+        .block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1vw;
+        }
+    </style>
+</head>
+<body>
+    <!-- Upper part of the page -->
+    <div class="heading">
+        <div class="imgName">
+            <img src="https://cdn.icon-icons.com/icons2/3995/PNG/512/banking_business_payment_cash_finance_money_coin_icon_254032.png" alt="home icon" class="icon">
+            <p class="siteName" onclick="budget()">FundFlow</p>
+        </div>
+        <div class="buttons">
+            <button onclick="refresh()">Clear Budget</button>
+        </div>
+    </div>
+    <!-- Elements visible only before creating the budget -->
+    <div class="beforeBudget">
+        <p class="textBefore">Seems Preety Empty...</p>
+        <p class="textBefore">Let's create your own budget</p>
+        <br>
+        <p class="textBefore">Budget Name</p>
+        <input type="text" class="budgetName" placeholder="e.g., Home Budget" required>
+        <p class="textBefore">Budget Amount</p>
+        <input type="number" class="budgetAmount" placeholder="e.g., 10000" required>
+        <br>
+        <button onclick="createBudget()">Create</button>
+    </div>
+    <!-- Elements visible only after creating the budget -->
+    <div class="afterBudget">
+        <div class="center">
+            <!-- Left part of the page containing the chart, legend and undo button -->
+            <div class="left">
+                <canvas id="myChart" style="width:100%;max-width:50vw"></canvas>
+            </div>
+            <!-- Right part of the page containing input areas that are responsible for adding elements to the chart -->
+            <div class="right">
+                <div class="div1">
+                    <p class="text">Expense Name</p>
+                    <input type="text" placeholder="e.g., Coffee" class="exName">
+                </div>
+                <div class="div2">
+                    <p class="text">Amount</p>
+                    <input type="number" placeholder="e.g., 7.50" class="exAmount">
+                </div>
+                <div class="div3">
+                    <p class="text">Color</p>
+                    <input type="color" class="exColor">
+                </div>
+                <div class="div4">
+                    <button onclick="fun()">Add Expense</button>
+                    <button onclick="reverse()">Undo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottomPart">
+        <div class="block">
+            <p class="text">My Github:</p>
+            <a href="https://github.com/Woltek1"><img src="https://cdn4.iconfinder.com/data/icons/iconsimple-logotypes/512/github-512.png" alt="github icon" class="icon"></a>
+        </div>
+    </div>
+    <script>
+        let xValues = [];
+        let yValues = [];
+        let barColors = ["#006A48"];
+
+        let chart = new Chart("myChart", {
+            type: "doughnut",
+            data: {
+                labels: xValues,
+                datasets: [
+                    {
+                        backgroundColor: barColors,
+                        data: yValues,
+                    },
+                ],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Your Budget",
+                },
+            },
+        });
+
+        // Sprawdzenie, czy localStorage zawiera dane, jeśli tak, to wczytaj je
+        let storedBudgetData = JSON.parse(localStorage.getItem('budgetData'));
+        if (storedBudgetData) {
+            xValues = storedBudgetData.xValues;
+            yValues = storedBudgetData.yValues;
+            chart.data.labels = xValues;
+            chart.data.datasets[0].data = yValues;
+            chart.data.datasets[0].backgroundColor = storedBudgetData.barColors;
+            chart.update();
+
+            // Sprawdzenie, czy dane mają długość większą niż 0 i ukrycie/odkrycie odpowiednich sekcji
+            if (xValues.length > 0) {
+                document.querySelector(".beforeBudget").style.display = "none";
+                document.querySelector(".afterBudget").style.display = "block";
+            }
+        }
+
+        function createBudget() {
+            let name = document.querySelector(".budgetName").value;
+            let amount = document.querySelector(".budgetAmount").value;
+            if (amount <= 0) {
+                alert("Amount too low")
+            } else {
+                chart.data.labels.push(name);
+                chart.data.datasets[0].data.push(amount);
+                chart.update();
+
+                // Zapis danych do localStorage po utworzeniu budżetu
+                saveToLocalStorage();
+
+                document.querySelector(".beforeBudget").style.display = "none";
+                document.querySelector(".afterBudget").style.display = "block";
+            }
+        }
+
+        function fun() {
+            if (document.querySelector(".exAmount").value <= 0 || document.querySelector(".exAmount").value > yValues[0]) {
+                alert("Nuh uh")
+            } else {
+                chart.data.labels.push(document.querySelector(".exName").value);
+                chart.data.datasets[0].data.push(document.querySelector(".exAmount").value);
+                chart.data.datasets[0].backgroundColor.push(document.querySelector(".exColor").value);
+                yValues[0] -= document.querySelector(".exAmount").value;
+                if (yValues[0] > 0) {
+                    chart.update();
+                    let name = document.querySelector(".exName");
+                    name.value = "";
+                    let amount = document.querySelector(".exAmount");
+                    amount.value = "";
+                    let color = document.querySelector(".exColor");
+                    color.value = "";
+
+                    // Zapis danych do localStorage po dodaniu wydatku
+                    saveToLocalStorage();
+                } else {
+                    alert("You are going over budget!");
+                }
+            }
+        }
+
+        function reverse() {
+            if (xValues.length > 1) {
+                yValues[0] += Number(yValues[yValues.length - 1]);
+                xValues.pop();
+                yValues.pop();
+                chart.data.labels = xValues;
+                chart.data.datasets[0].data = yValues;
+                chart.data.datasets[0].backgroundColor.pop();
+                chart.update();
+
+                // Zapis danych do localStorage po cofnięciu ostatniego wydatku
+                saveToLocalStorage();
+            } else {
+                alert("No elements left to delete");
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('budgetData', JSON.stringify({
+                xValues: xValues,
+                yValues: yValues,
+                barColors: chart.data.datasets[0].backgroundColor
+            }));
+        }
+
+        function refresh() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
